@@ -31,3 +31,22 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
     def __str__(self):
         return self.choice_text
+
+class Osoba(models.Model):
+    imie =
+    nazwisko
+    plec
+    stanowisko
+
+    # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)
+    # nazwisko - pole tekstowe, wymagane, niepuste
+    # plec - pole wyboru (kobieta, mężczyzna, inne)
+    # stanowisko - klucz obcy do modelu Stanowisko (do utworzenia w kolejnym kroku).
+
+class Stanowisko(models.Model):
+    nazwa
+    opis
+
+
+    # nazwa - pole tekstowe, wymagane, niepuste
+    # opis - pole tekstowe, opcjonalne
