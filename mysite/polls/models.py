@@ -32,21 +32,23 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
+class Stanowisko(models.Model):
+    nazwa = models.CharField(max_length = 200, blank = False)
+    opis = models.CharField(max_length = 200)
+
+
+    # nazwa - pole tekstowe, wymagane, niepuste
+    # opis - pole tekstowe, opcjonalne
 class Osoba(models.Model):
-    imie =
-    nazwisko
-    plec
-    stanowisko
+    imie = models.CharField(max_length = 200, blank = False)
+    nazwisko = models.CharField(max_length = 200, blank = False)
+    PLCIE = [('K', 'Kobieta'),('M', 'Mężczyzna')]
+    plec = models.CharField(max_length=1,choices=PLCIE)
+    stanowisko = models.ForeignKey(Stanowisko, on_delete=models.CASCADE)
 
     # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)
     # nazwisko - pole tekstowe, wymagane, niepuste
     # plec - pole wyboru (kobieta, mężczyzna, inne)
     # stanowisko - klucz obcy do modelu Stanowisko (do utworzenia w kolejnym kroku).
 
-class Stanowisko(models.Model):
-    nazwa
-    opis
 
-
-    # nazwa - pole tekstowe, wymagane, niepuste
-    # opis - pole tekstowe, opcjonalne
