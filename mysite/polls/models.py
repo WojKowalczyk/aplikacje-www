@@ -45,7 +45,7 @@ class Osoba(models.Model):
     PLCIE = [('K', 'Kobieta'),('M', 'Mężczyzna')]
     plec = models.CharField(max_length=1,choices=PLCIE)
     stanowisko = models.ForeignKey(Stanowisko, on_delete=models.CASCADE)
-
+    data_dodania = models.DateField(auto_now_add=True)
     # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)
     # nazwisko - pole tekstowe, wymagane, niepuste
     # plec - pole wyboru (kobieta, mężczyzna, inne)

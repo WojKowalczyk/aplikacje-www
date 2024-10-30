@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Choice, Question
+from .models import Choice, Question, Osoba, Stanowisko
 
 
 class ChoiceInline(admin.TabularInline):
@@ -19,4 +19,9 @@ class QuestionAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
 
 
+class OsobaAdmin(admin.ModelAdmin):
+    readonly_fields = ["data_dodania"]
+
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Osoba, OsobaAdmin)
+admin.site.register(Stanowisko)
