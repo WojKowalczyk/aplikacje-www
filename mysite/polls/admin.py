@@ -20,8 +20,13 @@ class QuestionAdmin(admin.ModelAdmin):
 
 
 class OsobaAdmin(admin.ModelAdmin):
+    list_filter = ["stanowisko", "data_dodania"]
     readonly_fields = ["data_dodania"]
+    list_display = ["imie", "nazwisko", "plec", "id_stanowisko"]
+
+class StanowiskoAdmin(admin.ModelAdmin):
+    list_filter = ["nazwa"]
 
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Osoba, OsobaAdmin)
-admin.site.register(Stanowisko)
+admin.site.register(Stanowisko, StanowiskoAdmin)

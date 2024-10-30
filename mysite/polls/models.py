@@ -5,6 +5,7 @@ import datetime
 from django.utils import timezone
 from django.db import models
 from django.contrib import admin
+from django.utils.html import format_html
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -36,16 +37,30 @@ class Stanowisko(models.Model):
     nazwa = models.CharField(max_length = 200, blank = False)
     opis = models.CharField(max_length = 200)
 
+    def __str__(self):
+        return str(self.nazwa)
 
     # nazwa - pole tekstowe, wymagane, niepuste
     # opis - pole tekstowe, opcjonalne
 class Osoba(models.Model):
     imie = models.CharField(max_length = 200, blank = False)
     nazwisko = models.CharField(max_length = 200, blank = False)
-    PLCIE = [('K', 'Kobieta'),('M', 'Mężczyzna')]
-    plec = models.CharField(max_length=1,choices=PLCIE)
+    class Plcie(models.IntegerChoices):
+        Kobieta = 1
+        Mezczyzna = 2
+    plec = models.IntegerField(choices=Plcie.choices, default=1)
     stanowisko = models.ForeignKey(Stanowisko, on_delete=models.CASCADE)
     data_dodania = models.DateField(auto_now_add=True)
+
+    @admin.display
+    def id_stanowisko(self):
+        return (str(self.stanowisko.nazwa) + str(self.stanowisko.id))
+
+
+    class Meta:
+        ordering = ["nazwisko"]
+    def __str__(self):
+        return str(self.imie + " " + self.nazwisko)
     # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)
     # nazwisko - pole tekstowe, wymagane, niepuste
     # plec - pole wyboru (kobieta, mężczyzna, inne)
