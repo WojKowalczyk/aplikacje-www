@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Osoba, Stanowisko, Choice, Question
+from datetime import datetime
 
 class QuestionSerializer(serializers.Serializer):
     #id = serializers.IntegerField(read_only=True)
@@ -24,8 +25,35 @@ class OsobaModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Osoba
         fields = ["imie","nazwisko","plec","stanowisko","data_dodania"]
+    def validate_imie(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Powinny być same litery.")
+        return value
+    def validate_nazwisko(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Powinny być same litery.")
+        return value
+    def validate_data_dodania(self, value):
+        if value > datetime.today():
+            raise serializers.ValidationError("Data nie może być z przyszłości")
+        return
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('imie', instance.imie)
+        instance.shirt_size = validated_data.get('nazwisko', instance.nazwisko)
+        instance.data_dodanie = validated_data.get('data_dodania', instance.data_dodania)
+        instance.stanowisko = validated_data.get('stanowisko', instance.stanowisko)
+        instance.plec = validated_data.get("plec",instance.plec)
+        instance.save()
+        return instance
 
 class StanowiskoModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stanowisko
         fields = ["nazwa","opis"]
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('nazwa', instance.nazwa)
+        instance.description = validated_data.get('opis', instance.opis)
+        instance.save()
+        return instance

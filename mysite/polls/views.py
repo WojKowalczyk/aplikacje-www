@@ -1,4 +1,9 @@
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Osoba, Stanowisko
+from .serializers import OsobaModelSerializer, StanowiskoModelSerializer
 
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
@@ -90,3 +95,102 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+
+
+@api_view(['GET'])
+def position_list(request):
+    """
+    Lista wszystkich obiektów modelu stanowisko.
+    """
+    if request.method == 'GET':
+        positions = Stanowisko.objects.all()
+        serializer = StanowiskoModelSerializer(positions, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def person_list(request):
+    """
+    Lista wszystkich obiektów modelu Person.
+    """
+    if request.method == 'GET':
+        persons = Osoba.objects.all()
+        serializer = OsobaModelSerializer(persons, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def person_list_byname(request, name):
+    """
+    Lista wszystkich obiektów modelu Person.
+    """
+    persons = []
+    if request.method == 'GET':
+        for osoba in Osoba.objects.all():
+            if osoba.imie == name:
+                persons.append(osoba)
+    serializer = OsobaModelSerializer(persons, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def person_detail(request, pk):
+
+    """
+    :param request: obiekt DRF Request
+    :param pk: id obiektu Person
+    :return: Response (with status and/or object/s data)
+    """
+    try:
+        person = Osoba.objects.get(pk=pk)
+    except Osoba.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    """
+    Zwraca pojedynczy obiekt typu Person.
+    """
+    if request.method == 'GET':
+        person = Osoba.objects.get(pk=pk)
+        serializer = OsobaModelSerializer(person)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = OsobaModelSerializer(person, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        person.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def position_detail(request, pk):
+
+        """
+        :param request: obiekt DRF Request
+        :param pk: id obiektu Person
+        :return: Response (with status and/or object/s data)
+        """
+    try:
+        position = Stanowisko.objects.get(pk=pk)
+    except Stanowisko.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+        """
+        Zwraca pojedynczy obiekt typu Person.
+        """
+    if request.method == 'GET':
+        position = Stanowisko.objects.get(pk=pk)
+        serializer = StanowiskoModelSerializer(position)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = StanowiskoModelSerializer(position, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        position.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
