@@ -22,9 +22,10 @@ class ChoiceModelSerializer(serializers.ModelSerializer):
 
 
 class OsobaModelSerializer(serializers.ModelSerializer):
+    wlasciciel = serializers.ReadOnlyField(source='wlasciciel.username')
     class Meta:
         model = Osoba
-        fields = ["imie","nazwisko","plec","stanowisko","data_dodania"]
+        fields = ["imie","nazwisko","plec","stanowisko","data_dodania", "wlasciciel"]
     def validate_imie(self, value):
         if not value.isalpha():
             raise serializers.ValidationError("Powinny być same litery.")
@@ -44,6 +45,7 @@ class OsobaModelSerializer(serializers.ModelSerializer):
         instance.data_dodanie = validated_data.get('data_dodania', instance.data_dodania)
         instance.stanowisko = validated_data.get('stanowisko', instance.stanowisko)
         instance.plec = validated_data.get("plec",instance.plec)
+        instance.wlasciciel = validated_data.get("wlasciciel",instance.wlasciciel)
         instance.save()
         return instance
 

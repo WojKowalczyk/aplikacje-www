@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 import datetime
@@ -51,6 +52,7 @@ class Osoba(models.Model):
     plec = models.IntegerField(choices=Plcie.choices, default=1)
     stanowisko = models.ForeignKey(Stanowisko, on_delete=models.CASCADE)
     data_dodania = models.DateField(auto_now_add=True)
+    wlasciciel = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     @admin.display
     def id_stanowisko(self):

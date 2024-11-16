@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Osoba, Stanowisko
 from .serializers import OsobaModelSerializer, StanowiskoModelSerializer
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework import permissions
 
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
@@ -110,6 +114,7 @@ def position_list(request):
 
 @api_view(['GET'])
 def person_list(request):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     """
     Lista wszystkich obiektów modelu Person.
     """
@@ -120,6 +125,7 @@ def person_list(request):
 
 @api_view(['GET'])
 def person_list_byname(request, name):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     """
     Lista wszystkich obiektów modelu Person.
     """
@@ -131,8 +137,9 @@ def person_list_byname(request, name):
     serializer = OsobaModelSerializer(persons, many=True)
     return Response(serializer.data)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET'])
 def person_detail(request, pk):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     """
     :param request: obiekt DRF Request
@@ -152,16 +159,32 @@ def person_detail(request, pk):
         serializer = OsobaModelSerializer(person)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+@api_view(['PUT', 'DELETE'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def person_update_delete(request, pk):
+
+    """
+    :param request: obiekt DRF Request
+    :param pk: id obiektu Person
+    :return: Response (with status and/or object/s data)
+    """
+    try:
+        person = Osoba.objects.get(pk=pk)
+    except Osoba.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
         serializer = OsobaModelSerializer(person, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(wlasciciel=request.user)
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         person.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def position_detail(request, pk):
