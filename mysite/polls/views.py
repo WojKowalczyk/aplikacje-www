@@ -165,20 +165,11 @@ def person_detail(request, pk):
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def position_detail(request, pk):
-
-        """
-        :param request: obiekt DRF Request
-        :param pk: id obiektu Person
-        :return: Response (with status and/or object/s data)
-        """
     try:
         position = Stanowisko.objects.get(pk=pk)
     except Stanowisko.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-        """
-        Zwraca pojedynczy obiekt typu Person.
-        """
     if request.method == 'GET':
         position = Stanowisko.objects.get(pk=pk)
         serializer = StanowiskoModelSerializer(position)
