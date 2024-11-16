@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import Osoba, Stanowisko
 from .serializers import OsobaModelSerializer, StanowiskoModelSerializer
 
@@ -131,37 +132,50 @@ def person_list_byname(request, name):
     serializer = OsobaModelSerializer(persons, many=True)
     return Response(serializer.data)
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def person_detail(request, pk):
+# @api_view(['GET', 'PUT', 'DELETE'])
+# def person_detail(request, pk):
+#
+#     """
+#     :param request: obiekt DRF Request
+#     :param pk: id obiektu Person
+#     :return: Response (with status and/or object/s data)
+#     """
+#     try:
+#         person = Osoba.objects.get(pk=pk)
+#     except Osoba.DoesNotExist:
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+#
+#     """
+#     Zwraca pojedynczy obiekt typu Person.
+#     """
+#     if request.method == 'GET':
+#         person = Osoba.objects.get(pk=pk)
+#         serializer = OsobaModelSerializer(person)
+#         return Response(serializer.data)
+#
+#     elif request.method == 'PUT':
+#         serializer = OsobaModelSerializer(person, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     elif request.method == 'DELETE':
+#         person.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    """
-    :param request: obiekt DRF Request
-    :param pk: id obiektu Person
-    :return: Response (with status and/or object/s data)
-    """
-    try:
-        person = Osoba.objects.get(pk=pk)
-    except Osoba.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    """
-    Zwraca pojedynczy obiekt typu Person.
-    """
-    if request.method == 'GET':
+class person_detail(APIView):
+    def get(self, request, pk, format=None):
         person = Osoba.objects.get(pk=pk)
         serializer = OsobaModelSerializer(person)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
-        serializer = OsobaModelSerializer(person, data=request.data)
+    def post(selfself, request, format=None):
+        serializer = OsobaModelSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        person.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def position_detail(request, pk):
