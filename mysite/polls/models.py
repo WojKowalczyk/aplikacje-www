@@ -61,6 +61,9 @@ class Osoba(models.Model):
 
     class Meta:
         ordering = ["nazwisko"]
+        permissions = [
+            ("can_view_other_persons", "Can view other persons"),  # Custom permission
+        ]
     def __str__(self):
         return str(self.imie + " " + self.nazwisko)
     # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)

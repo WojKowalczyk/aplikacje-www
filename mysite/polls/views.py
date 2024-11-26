@@ -8,6 +8,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import permissions
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
@@ -30,6 +31,17 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[
                :5
                ]
+
+def person_view(request, pk):
+    # First, check if the user has the permission to view others
+    if not request.user.has_perm('polls.can_view_other_persons') and request.user != Osoba.objects.get(pk=pk).wlasciciel:
+        raise PermissionDenied()
+
+    try:
+        person = Osoba.objects.get(pk=pk)
+        return HttpResponse(f"Ten użytkownik nazywa się {person.imie} {person.nazwisko}")
+    except Osoba.DoesNotExist:
+        return HttpResponse(f"W bazie nie ma użytkownika o id={pk}.")
 
 class DetailView(generic.DetailView):
     model = Question
