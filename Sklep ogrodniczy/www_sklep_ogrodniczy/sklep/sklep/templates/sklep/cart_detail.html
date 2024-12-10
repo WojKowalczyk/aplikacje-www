@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twój koszyk</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<header>
+    <div class="user-auth">
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Wyloguj</a>
+        {% else %}
+            <a href="{% url 'index' %}">Zaloguj / Zarejestruj</a>
+        {% endif %}
+    </div>
+    <h1>Twój koszyk</h1>
+</header>
+
+<section class="cart-items">
+    {% if cart.items.all %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Produkt</th>
+                    <th>Ilość</th>
+                    <th>Cena</th>
+                    <th>Suma</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.product_text }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product.price }}</td>
+                        <td>{{ item.line_total }}</td>
+                        <td>
+                            <form action="{% url 'remove-from-cart' cart.id item.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        <p>Koszt wszystkich produktów: {{ cart.total_price }}</p>
+    {% else %}
+        <p>Twój koszyk jest pusty.</p>
+    {% endif %}
+</section>
+
+</body>
+</html>

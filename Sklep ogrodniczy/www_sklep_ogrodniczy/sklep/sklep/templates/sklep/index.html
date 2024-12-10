@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sklep ogrodniczy</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<header>
+    <div class="user-auth">
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Wyloguj</a>
+        {% else %}
+            <a href="{% url 'login' %}">Zaloguj / Zarejestruj</a>
+        {% endif %}
+    </div>
+    {% if user.is_authenticated and cart %}
+    <div class="cart-info">
+        <a href="{% url 'cart-detail-page' cart.id %}">
+            Koszyk: {{ cart.total_items }}  ({{ cart.total_price }})
+        </a>
+    </div>
+    {% endif %}
+    <h1>Witaj {% if user.is_authenticated %}{{ user.username }}{% endif %}, w sklepie ogrodniczym</h1>
+</header>
+
+<section class="product-list">
+    {% if products %}
+        {% for product in products %}
+            <div class="product-box">
+                <img src="{{ product.image.url|default:'http://via.placeholder.com/150' }}" alt="{{ product.product_text }}">
+                <h2>{{ product.product_text }}</h2>
+                <p>Cena: {{ product.price }}</p>
+                {% if user.is_authenticated and cart %}
+                <form action="{% url 'add-to-cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Dodaj do koszyka</button>
+                </form>
+                {% else %}
+                    <p>Zaloguj się by dodać przedmioty do koszyka.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+    {% else %}
+        <p>Nie ma produktów.</p>
+    {% endif %}
+</section>
+</body>
+</html>

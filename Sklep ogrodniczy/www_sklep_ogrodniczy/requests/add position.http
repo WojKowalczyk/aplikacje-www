@@ -1,0 +1,34 @@
+###
+# @non-worker
+POST http://127.0.0.1:8000/persons/add/
+Accept: application/json
+Content-Type: application/json
+Authorization: Token d011dbf2f10572afd2f8d0a36a1b44951155694f
+
+{ "id" : 5, "name" : "Ochroniarz", "description": "Ochroniarz" }
+
+###
+# @worker
+POST http://127.0.0.1:8000/persons/add/
+Accept: application/json
+Content-Type: application/json
+Authorization: Token 05ea8810ba6d8030f1582231cc95a45e13658680
+
+{ "id" : 6, "name" : "Ochroniarz", "description": "Ochroniarz" }
+
+###
+# @admin
+POST http://127.0.0.1:8000/positions/add/
+Accept: application/json
+Content-Type: application/json
+Authorization: Token 3dbdf2504dabe491df69bc89687a890b2b5f9c73
+
+{ "id" : 3, "name" : "Ochroniarz", "description": "Ochroniarz" }
+
+###
+# @notoken
+POST http://127.0.0.1:8000/persons/add/
+Accept: application/json
+Content-Type: application/json
+
+{ "id" : 7, "name" : "Ochroniarz", "description": "Ochroniarz" }

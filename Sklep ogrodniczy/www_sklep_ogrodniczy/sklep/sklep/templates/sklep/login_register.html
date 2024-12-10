@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zaloguj lub zarejestruj</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Zaloguj się lub zarejestruj</h1>
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <div class="auth-forms">
+        <div class="login-form">
+            <h2>Logowanie</h2>
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Nazwa użytkownika" required><br>
+                <input type="password" name="password" placeholder="Hasło" required><br>
+                <button type="submit">Zaloguj</button>
+            </form>
+        </div>
+
+        <div class="register-form">
+            <h2>Rejestracja</h2>
+            <form action="{% url 'user-register' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Nazwa użytkownika" required><br>
+                <input type="email" name="email" placeholder="Email" required><br>
+                <input type="password" name="password" placeholder="Hasło" required><br>
+                <button type="submit">Zarejestruj</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

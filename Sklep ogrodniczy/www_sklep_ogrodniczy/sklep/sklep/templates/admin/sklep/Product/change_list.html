@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %}
+{% load admin_urls %}
+
+{% block object-tools %}
+{{ block.super }}
+<h2>Advanced Filters</h2>
+<ul>
+    <li><a href="{% url 'admin:products_by_initial_admin' letter='A' %}">Products Starting with a letter</a></li>
+    <li><a href="{% url 'admin:products_by_after_admin' date_str='2024-01-01' %}">Products published after a date</a></li>
+    <li><a href="{% url 'admin:products_search_admin' substring='grabie' %}">Search for a keyword</a></li>
+</ul>
+{% endblock %}
