@@ -40,7 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework.authtoken',
+    'rest_framework',
+    "graphene_django"
 ]
+
+GRAPHENE = {
+    "SCHEMA": "schema.schema"
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

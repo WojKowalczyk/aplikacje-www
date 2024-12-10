@@ -25,6 +25,7 @@ class OsobaAdmin(admin.ModelAdmin):
     list_display = ["imie", "nazwisko", "plec", "id_stanowisko", "wlasciciel"]
     search_fields = ('imie','nazwisko')
 
+
 class StanowiskoAdmin(admin.ModelAdmin):
     list_filter = ["nazwa"]
 

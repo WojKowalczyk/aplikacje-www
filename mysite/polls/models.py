@@ -1,12 +1,9 @@
-from django.db import models
 from django.contrib.auth.models import User
-
-# Create your models here.
 import datetime
 from django.utils import timezone
 from django.db import models
 from django.contrib import admin
-from django.utils.html import format_html
+
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -27,12 +24,14 @@ class Question(models.Model):
         now = timezone.now()
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
     def __str__(self):
         return self.choice_text
+
 
 class Stanowisko(models.Model):
     nazwa = models.CharField(max_length = 200, blank = False)
@@ -41,8 +40,7 @@ class Stanowisko(models.Model):
     def __str__(self):
         return str(self.nazwa)
 
-    # nazwa - pole tekstowe, wymagane, niepuste
-    # opis - pole tekstowe, opcjonalne
+
 class Osoba(models.Model):
     imie = models.CharField(max_length = 200, blank = False)
     nazwisko = models.CharField(max_length = 200, blank = False)
@@ -58,7 +56,6 @@ class Osoba(models.Model):
     def id_stanowisko(self):
         return (str(self.stanowisko.nazwa) + str(self.stanowisko.id))
 
-
     class Meta:
         ordering = ["nazwisko"]
         permissions = [
@@ -66,9 +63,3 @@ class Osoba(models.Model):
         ]
     def __str__(self):
         return str(self.imie + " " + self.nazwisko)
-    # imie - pole tekstowe, wymagane, niepuste (sprawdź dokumentację z pkt. 2)
-    # nazwisko - pole tekstowe, wymagane, niepuste
-    # plec - pole wyboru (kobieta, mężczyzna, inne)
-    # stanowisko - klucz obcy do modelu Stanowisko (do utworzenia w kolejnym kroku).
-
-

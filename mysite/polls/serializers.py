@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Osoba, Stanowisko, Choice, Question
 from datetime import datetime
 
+
 class QuestionSerializer(serializers.Serializer):
     #id = serializers.IntegerField(read_only=True)
     question_text = serializers.CharField(max_length=200)
@@ -48,6 +49,7 @@ class OsobaModelSerializer(serializers.ModelSerializer):
         instance.wlasciciel = validated_data.get("wlasciciel",instance.wlasciciel)
         instance.save()
         return instance
+
 
 class StanowiskoModelSerializer(serializers.ModelSerializer):
     class Meta:
